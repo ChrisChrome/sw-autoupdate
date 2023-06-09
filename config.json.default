@@ -1,0 +1,6 @@
+{
+	"install_dir": "C:\Your\Install\Directory",
+	"app_id": 1247090,
+	"check_interval_mins": 1,
+	"check_branch": "public"
+}
