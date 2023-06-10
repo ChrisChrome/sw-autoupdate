@@ -39,9 +39,11 @@ const updateServer = async () => {
 						return;
 					}
 					console.log(stdout);
-					updateCheck = setInterval(() => {
-						checkForUpdate();
-					}, config.check_interval_mins * 60000)
+					if (!config.force_update) {
+						updateCheck = setInterval(() => {
+							checkForUpdate();
+						}, config.check_interval_mins * 60000)
+					}
 					console.log(`${colors.cyan("[Info]")} Operation completed at ${new Date().toLocaleString()}. Took Took ${((new Date() - startTime) / 1000).toFixed(2)} seconds.`)
 				});
 			}
@@ -80,6 +82,8 @@ const checkForUpdate = async () => {
 
 checkForUpdate();
 
-var updateCheck = setInterval(async () => {
-	checkForUpdate();
-}, config.check_interval_mins * 60000)
+if (!config.force_update) {
+	var updateCheck = setInterval(async () => {
+		checkForUpdate();
+	}, config.check_interval_mins * 60000)
+}
