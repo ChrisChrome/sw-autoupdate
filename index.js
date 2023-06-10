@@ -17,6 +17,7 @@ const filter = (stdout) => {
 	// split by BuildID
 	const buildID = buildIDLine.split("BuildID")[1].trim();
 	// return the buildID
+	console.log(buildID)
 	return buildID;
 }
 
@@ -32,12 +33,35 @@ const checkForUpdate = async () => {
 				return;
 			}
 			const buildID = filter(stdout);
-			if (buildID !== response.data.data.depots.branches[config.branch].buildid) {
-				console.log("Update Available");
-				// download update
-				// would update here
+			console.log(response.data.data[config.app_id].depots.branches[config.check_branch].buildid)
+			if (buildID !== response.data.data[config.app_id].depots.branches[config.check_branch].buildid || config.force_update) {
+				console.log("!!! Update Available !!!");
+				exec(`steamcmd +force_install_dir ${config.install_dir} +login anonymous +app_update ${config.app_id} validate +quit`, (error, stdout, stderr) => {
+					if (error | stderr) {
+						console.log(`error: ${error.message}`);
+						return;
+					}
+					console.log(stdout);
+					exec(`steamcmd +force_install_dir ${config.install_dir} +login anonymous +app_update ${config.app_id} validate +quit`, (error, stdout, stderr) => { // Verify the update
+						if (error | stderr) {
+							console.log(`error: ${error.message}`);
+							return;
+						}
+						console.log(stdout);
+						if(config.after_update_command) {
+							exec(config.after_update_command, (error, stdout, stderr) => { // Run the after update command
+								if (error | stderr) {
+									console.log(`error: ${error.message}`);
+									return;
+								}
+								console.log(stdout);
+							});
+						}
+					});
+				});
+					
 			} else {
-				console.log("No Update Available");
+				console.log("No Update Available, continuing...");
 			}
 		});
 	})

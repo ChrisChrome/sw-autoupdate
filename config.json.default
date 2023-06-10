@@ -1,6 +1,8 @@
 {
-	"install_dir": "C:\Your\Install\Directory",
+	"install_dir": "C:\\your\\stormworks\\install",
 	"app_id": 1247090,
 	"check_interval_mins": 1,
-	"check_branch": "public"
+	"check_branch": "public",
+	"after_update_command": "echo You could probably use this to restart your servers or something.",
+	"force_update": false
 }
