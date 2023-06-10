@@ -5,19 +5,15 @@ const config = require("./config.json")
 const { exec } = require("child_process");
 
 const filter = (stdout) => {
-	console.log(stdout)
 	// Used to filter stdout of the following steamcmd command
 	// steamcmd +force_install_dir ${config.install_dir} +login anonymous +app_info_status 1 +app_status ${config.app_id} +quit
 	// Split the stdout by new line
 	const lines = stdout.split("\n");
-	console.log(lines)
 	// Filter the lines for the line containing "BuildID"
 	const buildIDLine = lines.filter(line => line.includes("BuildID"))[0];
-	console.log(buildIDLine)
 	// split by BuildID
 	const buildID = buildIDLine.split("BuildID")[1].trim();
 	// return the buildID
-	console.log(buildID)
 	return buildID;
 }
 
