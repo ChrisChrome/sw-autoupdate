@@ -1,5 +1,6 @@
 const fs = require("fs");
 const axios = require("axios");
+const colors = require("colors")
 const config = require("./config.json")
 // setup function to use child process to run steamcmd
 const { exec } = require("child_process");
@@ -21,24 +22,23 @@ const updateServer = async () => {
 	clearInterval(updateCheck);
 	exec(`steamcmd +force_install_dir ${config.install_dir} +login anonymous +app_update ${config.app_id} validate +quit`, (error, stdout, stderr) => {
 		if (error | stderr) {
-			console.log(`error: ${error.message}`);
+			console.log(`${colors.red("[Error]")} ${error.message}`);
 			return;
 		}
 		console.log(stdout);
 		exec(`steamcmd +force_install_dir ${config.install_dir} +login anonymous +app_update ${config.app_id} validate +quit`, (error, stdout, stderr) => { // Verify the update
 			if (error | stderr) {
-				console.log(`error: ${error.message}`);
+				console.log(`${colors.red("[Error]")} ${error.message}`);
 				return;
 			}
 			console.log(stdout);
 			if(config.after_update_command) {
 				exec(config.after_update_command, (error, stdout, stderr) => { // Run the after update command
 					if (error | stderr) {
-						console.log(`error: ${error.message}`);
+						console.log(`${colors.red("[Error]")} ${error.message}`);
 						return;
 					}
 					console.log(stdout);
-					console.log("Update Complete, continuing...");
 					updateCheck = setInterval(() => {
 						checkForUpdate();
 					}
@@ -50,26 +50,26 @@ const updateServer = async () => {
 }
 
 const checkForUpdate = async () => {
-	console.log("Checking for update...")
+	console.log(`${colors.cyan("[Info]")} Checking for update...`);
 	await axios.get(`https://api.steamcmd.net/v1/info/${config.app_id}`).then(async (response) => {
 		await exec(`steamcmd +force_install_dir ${config.install_dir} +login anonymous +app_info_update 1 +app_status ${config.app_id} +quit`, (error, stdout, stderr) => {
 			if (error) {
-				console.log(`error: ${error.message}`);
+				console.log(`${colors.red("[Error]")} ${error.message}`);
 				return;
 			}
 			if (stderr) {
-				console.log(`stderr: ${stderr}`);
+				console.log(`${colors.red("[Error]")} ${stderr}`);
 				return;
 			}
 			const buildID = filter(stdout);
-			console.log(`Current BuildID: ${buildID}`);
-			console.log(`Latest BuildID: ${response.data.data[config.app_id].depots.branches[config.check_branch].buildid}`);
+			console.log(`${colors.cyan("[Info]")} Current BuildID: ${buildID}`);
+			console.log(`${colors.cyan("[Info]")} Latest BuildID: ${response.data.data[config.app_id].depots.branches[config.check_branch].buildid}`);
 			if (buildID !== response.data.data[config.app_id].depots.branches[config.check_branch].buildid || config.force_update) {
-				console.log("!!! Update Available !!!");
+				console.log(`${colors.green("[Update]")} Update Available, updating...`);
 				updateServer();
 					
 			} else {
-				console.log("No Update Available, continuing...");
+				console.log(`${colors.green("[Update]")} No Update Available`);
 			}
 		});
 	})
