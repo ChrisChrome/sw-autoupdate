@@ -32,7 +32,7 @@ const updateServer = async () => {
 				return;
 			}
 			console.log(stdout);
-			if(config.after_update_command) {
+			if (config.after_update_command) {
 				exec(config.after_update_command, (error, stdout, stderr) => { // Run the after update command
 					if (error | stderr) {
 						console.log(`${colors.red("[Error]")} ${error.message}`);
@@ -41,8 +41,8 @@ const updateServer = async () => {
 					console.log(stdout);
 					updateCheck = setInterval(() => {
 						checkForUpdate();
-					}
-					, config.check_interval_mins * 60000)
+					}, config.check_interval_mins * 60000)
+					console.log(`${colors.cyan("[Info]")} Operation completed at ${new Date().toLocaleString()}`)
 				});
 			}
 		});
@@ -67,9 +67,10 @@ const checkForUpdate = async () => {
 			if (buildID !== response.data.data[config.app_id].depots.branches[config.check_branch].buildid || config.force_update) {
 				console.log(`${colors.green("[Update]")} Update Available, updating...`);
 				updateServer();
-					
+
 			} else {
 				console.log(`${colors.green("[Update]")} No Update Available`);
+				console.log(`${colors.cyan("[Info]")} Operation completed at ${new Date().toLocaleString()}`)
 			}
 		});
 	})
@@ -77,6 +78,6 @@ const checkForUpdate = async () => {
 
 checkForUpdate();
 
-var updateCheck = setInterval(() => {
+var updateCheck = setInterval(async () => {
 	checkForUpdate();
 }, config.check_interval_mins * 60000)
