@@ -18,6 +18,7 @@ const filter = (stdout) => {
 }
 
 const updateServer = async () => {
+	clearInterval(updateCheck);
 	exec(`steamcmd +force_install_dir ${config.install_dir} +login anonymous +app_update ${config.app_id} validate +quit`, (error, stdout, stderr) => {
 		if (error | stderr) {
 			console.log(`error: ${error.message}`);
@@ -37,6 +38,11 @@ const updateServer = async () => {
 						return;
 					}
 					console.log(stdout);
+					console.log("Update Complete, continuing...");
+					updateCheck = setInterval(() => {
+						checkForUpdate();
+					}
+					, config.check_interval_mins * 60000)
 				});
 			}
 		});
@@ -71,6 +77,6 @@ const checkForUpdate = async () => {
 
 checkForUpdate();
 
-setInterval(() => {
+var updateCheck = setInterval(() => {
 	checkForUpdate();
 }, config.check_interval_mins * 60000)
