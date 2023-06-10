@@ -5,7 +5,6 @@ const config = require("./config.json")
 const { exec } = require("child_process");
 
 const filter = (stdout) => {
-	console.log(stdout)
 	// Used to filter stdout of the following steamcmd command
 	// steamcmd +force_install_dir ${config.install_dir} +login anonymous +app_info_status 1 +app_status ${config.app_id} +quit
 	// Split the stdout by new line
@@ -57,7 +56,8 @@ const checkForUpdate = async () => {
 				return;
 			}
 			const buildID = filter(stdout);
-			console.log(response.data.data[config.app_id].depots.branches[config.check_branch].buildid)
+			console.log(`Current BuildID: ${buildID}`);
+			console.log(`Latest BuildID: ${response.data.data[config.app_id].depots.branches[config.check_branch].buildid}`);
 			if (buildID !== response.data.data[config.app_id].depots.branches[config.check_branch].buildid || config.force_update) {
 				console.log("!!! Update Available !!!");
 				updateServer();
