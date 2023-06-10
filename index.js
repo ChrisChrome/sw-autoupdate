@@ -42,7 +42,7 @@ const updateServer = async () => {
 					updateCheck = setInterval(() => {
 						checkForUpdate();
 					}, config.check_interval_mins * 60000)
-					console.log(`${colors.cyan("[Info]")} Operation completed at ${new Date().toLocaleString()}`)
+					console.log(`${colors.cyan("[Info]")} Operation completed at ${new Date().toLocaleString()}. Took Took ${((new Date() - startTime) / 1000).toFixed(2)} seconds.`)
 				});
 			}
 		});
@@ -50,6 +50,8 @@ const updateServer = async () => {
 }
 
 const checkForUpdate = async () => {
+	var startTime = new Date();
+	console.log(`${colors.cyan("[Info]")} Operation started at ${startTime.toLocaleString()}`);
 	console.log(`${colors.cyan("[Info]")} Checking for update...`);
 	await axios.get(`https://api.steamcmd.net/v1/info/${config.app_id}`).then(async (response) => {
 		await exec(`steamcmd +force_install_dir ${config.install_dir} +login anonymous +app_info_update 1 +app_status ${config.app_id} +quit`, (error, stdout, stderr) => {
@@ -70,7 +72,7 @@ const checkForUpdate = async () => {
 
 			} else {
 				console.log(`${colors.green("[Update]")} No Update Available`);
-				console.log(`${colors.cyan("[Info]")} Operation completed at ${new Date().toLocaleString()}`)
+				console.log(`${colors.cyan("[Info]")} Operation completed at ${new Date().toLocaleString()}. Took Took ${((new Date() - startTime) / 1000).toFixed(2)} seconds.`)
 			}
 		});
 	})
