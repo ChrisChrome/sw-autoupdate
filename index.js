@@ -1,9 +1,12 @@
 const fs = require("fs");
 const axios = require("axios");
+const Discord = require("discord.js");
 const colors = require("colors")
 const config = require("./config.json")
 // setup function to use child process to run steamcmd
 const { exec } = require("child_process");
+
+const hook = new Discord.WebhookClient({ url: config.webhook_url });
 
 const updateServer = async () => {
 	clearInterval(updateCheck);
@@ -19,6 +22,7 @@ const updateServer = async () => {
 				return;
 			}
 			console.log(stdout);
+			hook.send(config.messages.update_complete)
 			if (config.after_update_command) {
 				exec(config.after_update_command, (error, stdout, stderr) => { // Run the after update command
 					if (error | stderr) {
@@ -31,6 +35,7 @@ const updateServer = async () => {
 							checkForUpdate();
 						}, config.check_interval_mins * 60000)
 					}
+					hook.send(config.messages.post_update_complete)
 					console.log(`${colors.cyan("[Info]")} Operation completed at ${new Date().toLocaleString()}. Took Took ${((new Date() - startTime) / 1000).toFixed(2)} seconds.`)
 				});
 			}
@@ -48,6 +53,7 @@ const checkForUpdate = async () => {
 		console.log(`${colors.cyan("[Info]")} Latest BuildID: ${response.data.data[config.app_id].depots.branches[config.check_branch].buildid}`);
 		if (buildID !== response.data.data[config.app_id].depots.branches[config.check_branch].buildid || config.force_update) {
 			console.log(`${colors.green("[Update]")} Update Available, updating...`);
+			hook.send(config.messages.update_available);
 			updateServer();
 			fs.writeFileSync(`${config.install_dir}/current_build.txt`, response.data.data[config.app_id].depots.branches[config.check_branch].buildid, `utf8`)
 		} else {
