@@ -52,7 +52,7 @@ const updateServer = async () => {
 }
 
 const checkForUpdate = async () => {
-	var startTime = new Date();
+	startTime = new Date();
 	console.log(`${colors.cyan("[Info]")} Operation started at ${startTime.toLocaleString()}`);
 	console.log(`${colors.cyan("[Info]")} Checking for update...`);
 	await axios.get(`https://api.steamcmd.net/v1/info/${config.app_id}`).then(async (response) => {
@@ -81,7 +81,7 @@ const checkForUpdate = async () => {
 }
 
 checkForUpdate();
-
+var startTime = new Date();
 if (!config.force_update) {
 	var updateCheck = setInterval(async () => {
 		checkForUpdate();
