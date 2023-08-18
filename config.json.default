@@ -1,14 +1,38 @@
 {
-	"webhook_url": "discord webhook url",
-	"install_dir": "C:\\your\\stormworks\\install",
+	"webhook_url": "",
+	"public_webhook": "",
+	"install_dir": "C:\\Path\\to\\swds",
 	"app_id": 1247090,
 	"check_interval_mins": 1,
 	"check_branch": "public",
-	"after_update_command": "echo You could probably use this to restart your servers or something.",
+	"after_update_command": "C:\\Path\\to\\restartall.cmd",
 	"force_update": false,
 	"messages": {
 		"update_available": "Update available! Downloading now...",
 		"update_complete": "Update installed, restarting servers...",
-		"post_update_complete": "Servers restarted!"
+		"post_update_complete": "Servers restarted!",
+		"public": {
+			"update_available": {
+				"embeds": [{
+					"title": "Update available!",
+					"description": "Downloading now...",
+					"color": 16776960
+				}]
+			},
+			"update_complete": {
+				"embeds": [{
+					"title": "Update installed!",
+					"description": "Restarting servers...",
+					"color": 16776960
+				}]
+			},
+			"post_update_complete": {
+				"embeds": [{
+					"title": "Servers restarted!",
+					"description": "All servers have been restarted!",
+					"color": 16776960
+				}]
+			}
+		}
 	}
 }

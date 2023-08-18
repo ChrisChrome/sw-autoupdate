@@ -7,6 +7,7 @@ const config = require("./config.json")
 const { exec } = require("child_process");
 
 const hook = new Discord.WebhookClient({ url: config.webhook_url });
+const publicHook = new Discord.WebhookClient({ url: config.public_webhook });
 
 const updateServer = async () => {
 	clearInterval(updateCheck);
@@ -23,6 +24,7 @@ const updateServer = async () => {
 			}
 			console.log(stdout);
 			hook.send(config.messages.update_complete)
+			publicHook.send(config.messages.public.update_complete)
 			if (config.after_update_command) {
 				exec(config.after_update_command, (error, stdout, stderr) => { // Run the after update command
 					if (error | stderr) {
@@ -36,6 +38,7 @@ const updateServer = async () => {
 						}, config.check_interval_mins * 60000)
 					}
 					hook.send(config.messages.post_update_complete)
+					publicHook.send(config.messages.public.post_update_complete)
 					console.log(`${colors.cyan("[Info]")} Operation completed at ${new Date().toLocaleString()}. Took Took ${((new Date() - startTime) / 1000).toFixed(2)} seconds.`)
 				});
 			}
@@ -54,6 +57,7 @@ const checkForUpdate = async () => {
 		if (buildID !== response.data.data[config.app_id].depots.branches[config.check_branch].buildid || config.force_update) {
 			console.log(`${colors.green("[Update]")} Update Available, updating...`);
 			hook.send(config.messages.update_available);
+			publicHook.send(config.messages.public.update_available);
 			updateServer();
 			fs.writeFileSync(`${config.install_dir}/current_build.txt`, response.data.data[config.app_id].depots.branches[config.check_branch].buildid, `utf8`)
 		} else {
