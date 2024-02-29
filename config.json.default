@@ -1,4 +1,5 @@
 {
+	"enable_webhooks": false,
 	"webhook_url": "",
 	"public_webhook": "",
 	"install_dir": "C:\\Path\\to\\swds",
