@@ -11,13 +11,13 @@ if (config.enable_webhooks) {
 }
 const updateServer = async () => {
 	clearInterval(updateCheck);
-	exec(`steamcmd +force_install_dir ${config.install_dir} +login ${config.login} +app_update ${config.app_id} validate +quit`, (error, stdout, stderr) => {
+	exec(`steamcmd +force_install_dir ${config.install_dir} +login ${config.login} +app_update ${config.app_id} validate -noworkshop +quit`, (error, stdout, stderr) => {
 		if (error | stderr) {
 			console.log(`${colors.red("[Error]")} ${error.message}`);
 			return;
 		}
 		console.log(stdout);
-		exec(`steamcmd +force_install_dir ${config.install_dir} +login ${config.login} +app_update ${config.app_id} validate +quit`, (error, stdout, stderr) => { // Verify the update
+		exec(`steamcmd +force_install_dir ${config.install_dir} +login ${config.login} +app_update ${config.app_id} validate -noworkshop +quit`, (error, stdout, stderr) => { // Verify the update
 			if (error | stderr) {
 				console.log(`${colors.red("[Error]")} ${error.message}`);
 				return;
