@@ -3,6 +3,7 @@
 	"public_webhook": "",
 	"install_dir": "C:\\Path\\to\\swds",
 	"app_id": 1247090,
+	"login": "anonymous",
 	"check_interval_mins": 1,
 	"check_branch": "public",
 	"after_update_command": "C:\\Path\\to\\restartall.cmd",
